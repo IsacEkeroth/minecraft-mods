@@ -8,16 +8,13 @@
 		"iasc"
 	],
 	"contact": {
-		"homepage": "https://fabricmc.net/",
+		"homepage": "https://github.com/IsacEkeroth",
 		"sources": "https://github.com/IsacEkeroth/minecraft-mods"
 	},
 	"license": "CC0-1.0",
 	"icon": "assets/autosell/icon.png",
 	"environment": "*",
 	"entrypoints": {
-		"main": [
-			"dev.iasc.autosell.Autosell"
-		],
 		"client": [
 			"dev.iasc.autosell.AutosellClient"
 		]
