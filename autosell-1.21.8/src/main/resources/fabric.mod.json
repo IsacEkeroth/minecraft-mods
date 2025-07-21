@@ -3,13 +3,13 @@
 	"id": "autosell",
 	"version": "${version}",
 	"name": "autosell",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"description": "sends the command 'sellall' when an item gets put in slot 35 or when the hotkey is pressed(standard:R)",
 	"authors": [
-		"Me!"
+		"iasc"
 	],
 	"contact": {
 		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"sources": "https://github.com/IsacEkeroth/minecraft-mods"
 	},
 	"license": "CC0-1.0",
 	"icon": "assets/autosell/icon.png",
