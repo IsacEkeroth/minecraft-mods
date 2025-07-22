@@ -5,13 +5,25 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 
 public class MouseWigglerClient implements ClientModInitializer {
 	private static int wiggleTick = 0;
+	private static boolean toggled = false;
+	private static boolean prevRPressed = false;
 
 	@Override
 	public void onInitializeClient() {
 		ClientTickEvents.END_CLIENT_TICK.register(client -> {
 			if (client.player != null && client.currentScreen == null) {
-				if (org.lwjgl.glfw.GLFW.glfwGetKey(org.lwjgl.glfw.GLFW.glfwGetCurrentContext(),
-						org.lwjgl.glfw.GLFW.GLFW_KEY_R) == org.lwjgl.glfw.GLFW.GLFW_PRESS) {
+				boolean rPressed = org.lwjgl.glfw.GLFW.glfwGetKey(
+						org.lwjgl.glfw.GLFW.glfwGetCurrentContext(),
+						org.lwjgl.glfw.GLFW.GLFW_KEY_R) == org.lwjgl.glfw.GLFW.GLFW_PRESS;
+
+				if (rPressed && !prevRPressed) {
+					toggled = !toggled;
+				}
+				prevRPressed = rPressed;
+
+				if (toggled) {
+					client.options.forwardKey.setPressed(true);
+					client.options.attackKey.setPressed(true);
 					// Smooth circular movement
 					int steps = 10; // Fewer steps = faster movement
 					wiggleTick = (wiggleTick + 1) % steps;
@@ -25,6 +37,8 @@ public class MouseWigglerClient implements ClientModInitializer {
 					client.player.setPitch(basePitch + pitchOffset);
 				} else {
 					wiggleTick = 0;
+					client.options.forwardKey.setPressed(false);
+					client.options.attackKey.setPressed(false);
 				}
 			}
 		});
