@@ -11,11 +11,10 @@ import net.minecraft.item.ItemStack;
 
 public class AutosellClient implements ClientModInitializer {
 	private static KeyBinding autosellKeyBinding;
-	private final int LAST_SLOT = 35;
+	private final int LAST_SLOT = 30;
 
 	private final String commandString = "sellall";
 	private ItemStack lastStack = ItemStack.EMPTY;
-
 
 	@Override
 	public void onInitializeClient() {
@@ -50,7 +49,6 @@ public class AutosellClient implements ClientModInitializer {
 			assert client.player != null;
 			client.player.networkHandler.sendChatCommand(commandString);
 
-
 		}
 	}
 
@@ -61,9 +59,9 @@ public class AutosellClient implements ClientModInitializer {
 		boolean isEmpty = stack.isEmpty();
 
 		// Only trigger when slot transitions from empty to non-empty
-        lastStack = stack.copy();
-        if (wasEmpty && !isEmpty) {
-            client.player.networkHandler.sendChatCommand(commandString);
+		lastStack = stack.copy();
+		if (wasEmpty && !isEmpty) {
+			client.player.networkHandler.sendChatCommand(commandString);
 		}
-    }
+	}
 }
