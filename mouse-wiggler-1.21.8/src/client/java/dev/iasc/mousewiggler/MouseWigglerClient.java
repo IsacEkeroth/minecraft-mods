@@ -2,11 +2,14 @@ package dev.iasc.mousewiggler;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.minecraft.client.MinecraftClient;
 
 public class MouseWigglerClient implements ClientModInitializer {
 	private static int wiggleTick = 0;
 	private static boolean toggled = false;
 	private static boolean prevRPressed = false;
+	private static long lastTurnTime = System.currentTimeMillis();
+	private static float accumulatedYawOffset = 0f;
 
 	@Override
 	public void onInitializeClient() {
@@ -16,6 +19,7 @@ public class MouseWigglerClient implements ClientModInitializer {
 						org.lwjgl.glfw.GLFW.glfwGetCurrentContext(),
 						org.lwjgl.glfw.GLFW.GLFW_KEY_R) == org.lwjgl.glfw.GLFW.GLFW_PRESS;
 
+				boolean toggledPrev = toggled;
 				if (rPressed && !prevRPressed) {
 					toggled = !toggled;
 				}
@@ -24,24 +28,42 @@ public class MouseWigglerClient implements ClientModInitializer {
 				if (toggled) {
 					client.options.forwardKey.setPressed(true);
 					client.options.attackKey.setPressed(true);
+					// Turn 60 degrees to the right every 10 seconds
+					long currentTime = System.currentTimeMillis();
+					if (currentTime - lastTurnTime >= 10000) {
+						accumulatedYawOffset += 60f;
+						lastTurnTime = currentTime;
+					}
 					// Smooth circular movement
-					int steps = 10; // Fewer steps = faster movement
-					wiggleTick = (wiggleTick + 1) % steps;
-					double radius = 7.0; // Circle radius (smaller = tighter)
-					double angle = 2 * Math.PI * wiggleTick / steps;
-					float yawOffset = (float) (radius * Math.cos(angle));
-					float pitchOffset = (float) (radius * Math.sin(angle));
-					float baseYaw = client.player.getYaw();
-					float basePitch = client.player.getPitch();
-					client.player.setYaw(baseYaw + yawOffset);
-					client.player.setPitch(basePitch + pitchOffset);
+					moveInCircle(client, accumulatedYawOffset);
+					// Reset yaw offset after applying for one tick
+					if (accumulatedYawOffset != 0f && currentTime - lastTurnTime < 10) {
+						accumulatedYawOffset = 0f;
+					}
 				} else {
 					wiggleTick = 0;
-					client.options.forwardKey.setPressed(false);
-					client.options.attackKey.setPressed(false);
+					if (toggledPrev) {
+						accumulatedYawOffset = 0f;
+						lastTurnTime = System.currentTimeMillis();
+						client.options.forwardKey.setPressed(false);
+						client.options.attackKey.setPressed(false);
+					}
 				}
 			}
 		});
+	}
+
+	private void moveInCircle(MinecraftClient client, float extraYaw) {
+		int steps = 10; // Fewer steps = faster movement
+		wiggleTick = (wiggleTick + 1) % steps;
+		double radius = 7.0; // Circle radius (smaller = tighter)
+		double angle = 2 * Math.PI * wiggleTick / steps;
+		float yawOffset = (float) (radius * Math.cos(angle));
+		float pitchOffset = (float) (radius * Math.sin(angle));
+		float baseYaw = client.player.getYaw();
+		float basePitch = client.player.getPitch();
+		client.player.setYaw(baseYaw + yawOffset + extraYaw);
+		client.player.setPitch(basePitch + pitchOffset);
 	}
 }
 
