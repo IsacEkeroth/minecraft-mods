@@ -1,0 +1,49 @@
+{
+	"schemaVersion": 1,
+	"id": "autotyper",
+	"version": "${version}",
+	"name": "AutoTyper",
+	"description": "This is an example description! Tell everyone what your mod is about!",
+	"authors": [
+		"Iasc"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "CC0-1.0",
+	"icon": "assets/autotyper/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"dev.iasc.autotyper.AutoTyper"
+		],
+		"client": [
+			"dev.iasc.autotyper.AutoTyperClient"
+		]
+	},
+	"mixins": [
+		"autotyper.mixins.json",
+		{
+			"config": "autotyper.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.16.14",
+		"minecraft": "~1.21.8",
+		"java": ">=21",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"another-mod": "*"
+	},
+	"mixin": {
+		"required": true,
+		"package": "dev.iasc.autotyper.mixin",
+		"compatibilityLevel": "JAVA_21",
+		"client": [
+			"MessageHandlerMixin"
+		]
+	}
+}

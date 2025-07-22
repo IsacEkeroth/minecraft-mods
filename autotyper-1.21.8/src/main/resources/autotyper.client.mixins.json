@@ -1,0 +1,8 @@
+{
+  "required": true,
+  "package": "dev.iasc.autotyper.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "MessageHandlerMixin"
+  ]
+}

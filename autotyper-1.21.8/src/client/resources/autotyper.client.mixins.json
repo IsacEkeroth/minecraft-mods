@@ -1,0 +1,12 @@
+{
+	"required": true,
+	"package": "dev.iasc.autotyper.mixin.client",
+	"compatibilityLevel": "JAVA_21",
+	"client": [
+		"ExampleClientMixin",
+		"MessageHandlerMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}
